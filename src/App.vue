@@ -1,27 +1,47 @@
 <template>
   <div id="app">
     <h1>{{ titulo }}</h1>
+    <input class="filtro" type="search" @input="filtro = $event.target.value" placeholder="Busque pelo título">
+    {{ filtro }}
     <ul>
-      <li v-for="foto of fotos">
-        
-        <div class="painel">
-          <h2 class="painel-titulo">{{ foto.titulo }}</h2>
-          <div class="painel-conteudo">
-            <img class="imagem-responsiva" :src="foto.url" :alt="foto.titulo">
-          </div>
-        </div>
+      <li v-for="foto of fotosComFiltro">
+        <painel :titulo="foto.titulo">
+          <img class="imagem-responsiva" :src="foto.url" :alt="foto.titulo">
+        </painel>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import Painel from "./components/shared/painel/Painel.vue"
+
 export default {
+
+  components: {
+    painel : Painel
+  },
   name: 'app',
   data () {
     return {
       titulo: 'Alurapic',
-      fotos : []
+      fotos : [],
+      filtro : ''
+    }
+  },
+  computed : {
+    fotosComFiltro(){
+      if( this.filtro ){
+        
+        let exp = new RegExp( this.filtro.trim(), 'i' ); 
+        
+        return this.fotos.filter( 
+          foto => exp.test( foto.titulo )
+        );
+      }else{
+        
+        return this.fotos;
+      }
     }
   },
   created(){
@@ -68,26 +88,11 @@ a {
   width: 100%;
 }
 
-/* estilo do painel */ 
+.filtro{
 
-   .painel {
-    padding: 0 auto;
-    border: solid 2px grey;
-    display: inline-block;
-    margin: 5px;
-    box-shadow: 5px 5px 10px grey;
-    width: 200px;
-    height: 100%;
-    vertical-align: top;
-    text-align: center;
-  }
-
-  .painel .painel-titulo {
-    text-align: center;
-    border: solid 2px;
-    background: lightblue;
-    margin: 0 0 15px 0;
-    padding: 10px;
-    text-transform: uppercase;
-  }
+  display: block;
+  width: 100%;
+  margin: 1rem;
+  padding: .4rem;
+}
 </style>
