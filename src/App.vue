@@ -15,17 +15,15 @@ export default {
   data () {
     return {
       titulo: 'Alurapic',
-      fotos : [
-        {
-          url : "http://portalmelhoresamigos.com.br/wp-content/uploads/2016/05/beijo_lambida_cachorro.png",
-          descricao : "Cachorro"
-        },
-        {
-          url : "https://abrilsuperinteressante.files.wordpress.com/2016/03/cachorro.png",
-          descricao : "Cachorro"
-        }
-      ]
+      fotos : []
     }
+  },
+  created(){
+    let promise = this.$http.get('http://localhost:3000/v1/fotos');
+    
+    promise
+      .then( res => res.json() )
+      .then( fotos => this.fotos = fotos , err => console.log(err));
   }
 }
 </script>
