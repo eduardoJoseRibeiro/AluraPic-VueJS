@@ -1,28 +1,24 @@
 <template>
   <div id="app">
-    <nav>
-      <ul>
-        <li v-for="route in routes">
-          <router-link :to="route.path ? route.path : '/'">
-            {{ route.titulo }}
-          </router-link>
-        </li>
-      </ul>
-    </nav>
+    
+    <menu-nav :rotas="routes"></menu-nav>
 
-    <router-view></router-view>
+    <transition name="pagina">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
 <script>
-
-import { routes } from "./routes";
+import Menu from "./components/shared/menu/Menu.vue"
+import { routes } from "./routes"
 
 export default {
-
+  components : {
+    'menu-nav' : Menu
+  }, 
   data(){
-    return{
-
+    return {
       routes
     }
   }
@@ -40,4 +36,13 @@ export default {
   margin-top: 60px;
   width: 96%;
 }
+
+  .pagina-enter, .pagina-leave-active{
+
+      opacity: 0;
+  }
+  .pagina-enter-active, .pagina-leave-active{
+
+      transition: opacity .5s;
+  }
 </style>

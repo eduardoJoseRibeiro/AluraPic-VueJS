@@ -7,7 +7,12 @@
       <li v-for="foto of fotosComFiltro">
         <painel :titulo="foto.titulo">
           <imagem-responsiva :titulo="foto.titulo" :url="foto.url"></imagem-responsiva>
-          <!-- <img class="imagem-responsiva" :src="foto.url" :alt="foto.titulo"> -->
+          <botao 
+              tipo="submit" 
+              rotulo="Excluir" 
+              @botaoAtivado="excluir( foto )"
+              estilo="perigo"
+              :confirmacao="true"></botao>
         </painel>
       </li>
     </ul>
@@ -16,13 +21,15 @@
 
 <script>
 import Painel from "../shared/painel/Painel.vue"
-import ImagemResponsiva from "../shared/imagem-responsiva/imagemResponsiva.vue"
+import ImagemResponsiva from "../shared/imagem-responsiva/ImagemResponsiva.vue"
+import Botao from "../shared/botao/Botao.vue";
 
 export default {
 
   components: {
     painel : Painel,
-    'imagem-responsiva' : ImagemResponsiva
+    'imagem-responsiva' : ImagemResponsiva,
+    botao : Botao
   },
   name: 'app',
   data () {
@@ -46,6 +53,14 @@ export default {
         return this.fotos;
       }
     }
+  },
+
+  methods : {
+      
+      excluir( item ){
+
+          alert( item.titulo + " excluido com sucesso!" );
+      }
   },
   created(){
     let promise = this.$http.get('http://localhost:3000/v1/fotos');
