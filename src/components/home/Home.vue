@@ -6,7 +6,7 @@
     <ul>
       <li v-for="foto of fotosComFiltro">
         <painel :titulo="foto.titulo">
-          <imagem-responsiva :titulo="foto.titulo" :url="foto.url"></imagem-responsiva>
+          <imagem-responsiva v-transform="360" :titulo="foto.titulo" :url="foto.url"></imagem-responsiva>
           <botao 
               tipo="submit" 
               rotulo="Excluir" 
