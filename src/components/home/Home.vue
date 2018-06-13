@@ -1,12 +1,16 @@
 <template>
   <div>
     <h1>{{ titulo }}</h1>
+    <p v-show="mensagem" class="centralizado"> {{ mensagem }} </p>
     <input class="filtro" type="search" @input="filtro = $event.target.value" placeholder="Busque pelo título">
     {{ filtro }}
     <ul>
-      <li v-for="foto of fotosComFiltro">
+      <li v-for="foto in fotosComFiltro">
         <painel :titulo="foto.titulo">
           <imagem-responsiva v-transform="360" :titulo="foto.titulo" :url="foto.url"></imagem-responsiva>
+          <router-link :to="{ name : 'altera', params : { id : foto._id }}">
+            <botao rotulo="Alterar" tipo="submit"/>            
+          </router-link>
           <botao 
               tipo="submit" 
               rotulo="Excluir" 
@@ -23,6 +27,7 @@
 import Painel from "../shared/painel/Painel.vue"
 import ImagemResponsiva from "../shared/imagem-responsiva/ImagemResponsiva.vue"
 import Botao from "../shared/botao/Botao.vue";
+import FotoService from '../../domain/foto/FotoService';
 
 export default {
 
@@ -36,7 +41,8 @@ export default {
     return {
       titulo: 'Alurapic',
       fotos : [],
-      filtro : ''
+      filtro : '',
+      mensagem : ''
     }
   },
   computed : {
@@ -57,16 +63,25 @@ export default {
 
   methods : {
       
-      excluir( item ){
+      excluir( foto ){
 
-          alert( item.titulo + " excluido com sucesso!" );
+          this.resource.apaga(foto._id) 
+            .then( 
+              () => { 
+                let indice = this.fotos.indexOf( foto );
+                this.fotos.splice( indice, 1 );
+                this.mensagem = `Foto ${ foto.titulo } excluída com sucesso!`
+              }, err => { 
+                console.log( err );
+                this.mensagem = `Não foi possível remover a foto ${ foto.titulo }`;
+              });
       }
   },
   created(){
-    let promise = this.$http.get('http://localhost:3000/v1/fotos');
-    
-    promise
-      .then( res => res.json() )
+    this.resource = new FotoService(this.$resource);
+
+    this.resource
+      .lista()
       .then( fotos => this.fotos = fotos , err => console.log(err));
   }
 }
@@ -101,5 +116,9 @@ a {
   width: 100%;
   margin: 1rem;
   padding: .4rem;
+}
+
+.centralizado {
+  text-align: center;
 }
 </style>
