@@ -82,7 +82,10 @@ export default {
 
     this.resource
       .lista()
-      .then( fotos => this.fotos = fotos , err => console.log(err));
+      .then( fotos => this.fotos = fotos , err => { 
+        console.log(err);
+        this.mensagem = err.message;
+      });
   }
 }
 </script>
